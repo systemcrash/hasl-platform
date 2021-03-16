@@ -5,9 +5,9 @@ This is a platform for Home Assistant that can be used to create "Departure boar
 
 ## Automatic installation using HACS
 
-First, visit [https://www.trafiklab.se/api](https://www.trafiklab.se/api) and create a free account. They provide multiple APIs, the ones you want is ["SL Trafikinformation 4"](https://www.trafiklab.se/api/sl-realtidsinformation-4) and ["SL Störningsinformation 2"](https://www.trafiklab.se/api/sl-storningsinformation-2), optionally you can also register for ["SL Trafikläget 2"](https://www.trafiklab.se/api/sl-trafiklaget-2) to get status sensors. When you have your API keys, you're ready to add the component to your Home Assistant.
+First, visit [https://www.trafiklab.se/api](https://www.trafiklab.se/api) and create a free account. They provide multiple APIs, the ones you want are ["SL Trafikinformation 4"](https://www.trafiklab.se/api/sl-realtidsinformation-4) and ["SL Störningsinformation 2"](https://www.trafiklab.se/api/sl-storningsinformation-2), optionally you can also register for ["SL Trafikläget 2"](https://www.trafiklab.se/api/sl-trafiklaget-2) to get status sensors. When you have your API keys, you're ready to add the component to your Home Assistant.
 
-After you added the integration then add the desired configuration in config. Here is an example of a typical configuration:
+After you added the integration, add the desired configuration in `configuration.yaml`. Here is an example of a typical configuration:
 
 ```yaml
 sensor:
@@ -39,7 +39,7 @@ Restart Home Assistant to make sure it loads and calls the integration!
 
 
 ## Configuration variables for departure sensors
-This sensor type creates a departuresined departure sensor for a specific stop. You can find the ID with some help from another API , ["SL Platsuppslag](https://www.trafiklab.se/api/sl-platsuppslag/konsol)).  In the example above, site 4244 is Mölnvik. This sensor can be used with hasl-cards ([departure-card](https://github.com/hasl-platform/lovelace-hasl-departure-card), [traffic-status-card](https://github.com/hasl-platform/lovelace-hasl-traffic-status-card)) and outputs data as described in the [sensor description](DEPARTURES_OBJECT.md).
+This sensor type creates a departure sensor for a specific stop. You can find the ID with some help from another API , ["SL Platsuppslag](https://www.trafiklab.se/api/sl-platsuppslag/konsol)).  In the example above, site 4244 is Mölnvik. This sensor can be used with hasl-cards ([departure-card](https://github.com/hasl-platform/lovelace-hasl-departure-card), [traffic-status-card](https://github.com/hasl-platform/lovelace-hasl-traffic-status-card)) and outputs data as described in the [sensor description](DEPARTURES_OBJECT.md).
 
 | Name | Required? | Description | Default |
 |------|-----------|-------------|---------|
@@ -50,11 +50,11 @@ This sensor type creates a departuresined departure sensor for a specific stop. 
 |**sensor**| optional | Specify the name of a binary_sensor to determine if this sensor should be updated. If sensor is ON, or if this option is not set, update will be done. ||
 |**property**| optional | Which property to report as sensor state. Can be one of: `min` minutes to departure (default), `time` next departure time, `deviations` number of active deviations, `refresh` if sensor is refreshing or not, `updated` when sensor data was last updated. ||
 |**lines**| optional | An array list of line numbers that you are interested in. Most likely, you only want info on the bus that you usually ride.  If omitted, all lines at the specified site id will be included.  In the example above, lines 474 and 480C will be included. ||
-|**direction**| optional | Unless your site id happens to be the end of the line, buses and trains goes in both directions. You can enter **1** or **2** (**0** represents both directions). | 0 |
+|**direction**| optional | Unless your site id happens to be the end of the line, buses and trains go in both directions. You can enter **1** or **2** (**0** represents both directions). | 0 |
 |**timewindow**| optional | The number of minutes to look ahead when requesting the departure board from the api. Minimum is 5 and maximum is 60. | 60 |
 
 ## Configuration variables for status sensors
-This sensor type creates a Traffic Situation sensor and shows the all-up trafic situation in the public transportation system. This sensor can be used with hasl-cards ([departure-card](https://github.com/hasl-platform/lovelace-hasl-departure-card), [traffic-status-card](https://github.com/hasl-platform/lovelace-hasl-traffic-status-card)) . and outputs data as described in the [sensor description](STATUS_OBJECT.md)
+This sensor type creates a Traffic Situation sensor and shows the overall trafic situation in the public transportation system. This sensor can be used with hasl-cards ([departure-card](https://github.com/hasl-platform/lovelace-hasl-departure-card), [traffic-status-card](https://github.com/hasl-platform/lovelace-hasl-traffic-status-card)) and outputs data as described in the [sensor description](STATUS_OBJECT.md)
 
 | Name | Required? | Description |
 |------|-----------|-------------|
@@ -71,20 +71,20 @@ The sensors can be used with multiple cards in hasl-cards ([departure-card](http
 
 ## API-call restrictions and optimizations
 
-The `Bronze` level API is limited to 30 API calls per minute, 10.000 per month. With 10.000 calls per month, that allows for less than one call every 4 minute but if you are using multiple sensors this is split between them and each config sensor section can contain a separate pair of api-keys.
-The calls have been optimized and are beeing locally cached for the specified freshness, if multiple sensors are using the same siteid there will still only be one call. Caching is done in a file (haslcache.json) that will be automatically created in the configuration directory.
-You can also specify a binary_sensor that perhaps is turned of when no-one is at home or similar to reduce the number of calls. Optimizations can be turned of if needed in very specific situation or if you have a high level API-key.
+The `Bronze` level API is limited to 30 API calls per minute, 10.000 per month. With 10.000 calls per month, that allows for fewer than one calls every 4 minutes but if you are using multiple sensors, this is split between them and each config sensor section can contain a separate pair of api-keys.
+The calls have been optimized and are locally cached for the specified freshness. If multiple sensors use the same `siteid` there will still only be one call. Caching is done in a file (`haslcache.json`) that is automatically created in the configuration directory.
+You can also specify a binary_sensor that perhaps is false when no-one is at home or similar to reduce the number of calls. Optimizations can be turned off if needed in very specific situations or if you have a high level API-key.
 
-## Experimental and upcomming features
+## Experimental and upcoming features
 
-So far there is very limited support for other api-functions except what is listed above. However there are some experimentation going on with future functionalities of the platform and this code. Nothing that is decided or ready, but the features may be used as-is for now to experiment and see what can be done. Also, if you extend the code please submit a PR so it can be furthered.
+So far there is very limited support for other api-functions except those listed above. There is some ongoing experimentation with future functionalities of the platform and this code, however. Nothing that is decided or ready, but the features may be used as-is for now to experiment and see what can be done. Also, if you extend the code please submit a PR to improve this project.
 
-If you have any suggestions do not forget to add them to the issue tracker to be included in HASL 3.0, please use the enhancement label to add your request. [Go do it now!](https://github.com/DSorlov/hasl-platform/issues/new).
+If you have any suggestions, remember to add them to the issue tracker to be included in HASL 3.0, with the `enhancement` label on your request. [Go do it now!](https://github.com/DSorlov/hasl-platform/issues/new).
 
-To use this stuff you should know your way around advanced customization of your Home Assistant enviroment, but for now three parts exists:
+To use this stuff you should know your way around advanced customization of your Home Assistant enviroment, but for now three parts exist:
 
 ### Train location sensor
-This sensor type creates a train location sensor and shows the train locations for subway, and surface trains. This sensor is EXPERIMENTAL and NOT SUPPORTED yet. Outputs json object to be parsed by frontend, but no specific card exists yet. Subject to change.
+This sensor type creates a train location sensor and shows the train locations for subway, and surface trains. This sensor is EXPERIMENTAL and NOT SUPPORTED yet. Outputs json objects to be parsed by the frontend, but no specific card exists yet. Subject to change.
 
 | Name | Required? | Description |
 |------|-----------|-------------|
@@ -96,7 +96,7 @@ This sensor type creates a train location sensor and shows the train locations f
 
 
 ### Platsuppslag
-(Requires PU1-API-Key) The PU1 or [Platsuppslag](https://www.trafiklab.se/api/sl-platsuppslag) API can be used to get the codes for stops needed for configuration as described above. It may also be used to do advanced typeahead searches. There is no GUI provided but there is a services exposed under services: `hasl.find_location`. It requires one argument as a string `search_string` that contains the place to be looked up. Returns the raw api response for now.
+(Requires PU1-API-Key) The PU1 or [Platsuppslag](https://www.trafiklab.se/api/sl-platsuppslag) API can be used to get the codes for stops needed for configuration as described above. It may also be used to do advanced type-ahead searches. There is no GUI provided but there is a service exposed under services: `hasl.find_location`. It requires one argument as a string `search_string` that contains the place to be looked up. Returns the raw API response for now.
 
 Configuration.yaml
 ```yaml
@@ -104,7 +104,7 @@ hasl:
   pu1key: YOUR-PU1-KEY-HERE
 ```
 ### Reseplaneraren 3.1
-(Requires TP3-API-Key) The TP3 or [Reseplaneraren3.1](https://www.trafiklab.se/api/sl-reseplanerare-31) lets you search for routes, prices and current times in the real-time and planned schedule for the stockholm traffic. This could be used to have a dashboard for the current route to work or something similar. There is no GUI provided but there is two services exposed under services: `hasl.find_trip_id` which accepts a stop id from SL as integers `orig` and `dest` and then returns the raw api response. The second service `hasl.find_trip_loc` instead accepts a logitude and latitude in `orig_lat`, `orig_lon`, `dest_lat` and `dest_lon` and also returns raw response.
+(Requires TP3-API-Key) The TP3 or [Reseplaneraren3.1](https://www.trafiklab.se/api/sl-reseplanerare-31) lets you search for routes, prices and current times in the real-time and planned schedule for Stockholm traffic. This can be used to have a dashboard for the current route to your workplace or something similar. There is no GUI provided but there are two services exposed under services: `hasl.find_trip_id` which accepts a stop id from SL as integers `orig` and `dest` which then returns a raw API response. The second service `hasl.find_trip_loc` instead accepts a logitude and latitude in `orig_lat`, `orig_lon`, `dest_lat` and `dest_lon` and also returns a raw API response.
 
 Configuration.yaml
 ```yaml
